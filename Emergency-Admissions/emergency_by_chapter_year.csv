@@ -1,0 +1,518 @@
+year,chapter,chapter_name,emergency
+1998,I,Infectious & parasitic diseases,104509.0
+1998,II,Neoplasms,156743.0
+1998,III,Blood & immune disorders,45268.0
+1998,IV,"Endocrine, nutritional & metabolic",53947.0
+1998,IX,Circulatory system diseases,512173.0
+1998,V,Mental & behavioural disorders,141825.0
+1998,VI,Nervous system diseases,88208.0
+1998,VII,Eye & adnexa diseases,21810.0
+1998,VIII,Ear & mastoid diseases,13060.0
+1998,X,Respiratory system diseases,459088.0
+1998,XI,Digestive system diseases,335498.0
+1998,XII,Skin & subcutaneous tissue,84099.0
+1998,XIII,Musculoskeletal & connective tissue,117839.0
+1998,XIV,Genitourinary system diseases,171121.0
+1998,XIX,Injury & poisoning,569372.0
+1998,XV,Pregnancy & childbirth,140794.0
+1998,XVI,Perinatal conditions,15059.0
+1998,XVII,Congenital malformations,9443.0
+1998,XVIII,Symptoms & abnormal findings,692017.0
+1998,XXI,Health services contacts,53081.0
+1999,I,Infectious & parasitic diseases,103786.0
+1999,II,Neoplasms,158742.0
+1999,III,Blood & immune disorders,46656.0
+1999,IV,"Endocrine, nutritional & metabolic",56738.0
+1999,IX,Circulatory system diseases,507002.0
+1999,V,Mental & behavioural disorders,136155.0
+1999,VI,Nervous system diseases,87517.0
+1999,VII,Eye & adnexa diseases,22511.0
+1999,VIII,Ear & mastoid diseases,12351.0
+1999,X,Respiratory system diseases,451928.0
+1999,XI,Digestive system diseases,345970.0
+1999,XII,Skin & subcutaneous tissue,90386.0
+1999,XIII,Musculoskeletal & connective tissue,120466.0
+1999,XIV,Genitourinary system diseases,174213.0
+1999,XIX,Injury & poisoning,587582.0
+1999,XV,Pregnancy & childbirth,141970.0
+1999,XVI,Perinatal conditions,15460.0
+1999,XVII,Congenital malformations,9310.0
+1999,XVIII,Symptoms & abnormal findings,714377.0
+1999,XXI,Health services contacts,53659.0
+2000,I,Infectious & parasitic diseases,111934.0
+2000,II,Neoplasms,155859.0
+2000,III,Blood & immune disorders,45982.0
+2000,IV,"Endocrine, nutritional & metabolic",56777.0
+2000,IX,Circulatory system diseases,496819.0
+2000,V,Mental & behavioural disorders,130008.0
+2000,VI,Nervous system diseases,87350.0
+2000,VII,Eye & adnexa diseases,22503.0
+2000,VIII,Ear & mastoid diseases,12480.0
+2000,X,Respiratory system diseases,423152.0
+2000,XI,Digestive system diseases,349871.0
+2000,XII,Skin & subcutaneous tissue,95461.0
+2000,XIII,Musculoskeletal & connective tissue,123770.0
+2000,XIV,Genitourinary system diseases,176670.0
+2000,XIX,Injury & poisoning,560280.0
+2000,XV,Pregnancy & childbirth,131980.0
+2000,XVI,Perinatal conditions,16106.0
+2000,XVII,Congenital malformations,8750.0
+2000,XVIII,Symptoms & abnormal findings,799138.0
+2000,XXI,Health services contacts,51946.0
+2001,I,Infectious & parasitic diseases,117597.0
+2001,II,Neoplasms,156251.0
+2001,III,Blood & immune disorders,49083.0
+2001,IV,"Endocrine, nutritional & metabolic",59570.0
+2001,IX,Circulatory system diseases,484012.0
+2001,V,Mental & behavioural disorders,126173.0
+2001,VI,Nervous system diseases,87985.0
+2001,VII,Eye & adnexa diseases,22323.0
+2001,VIII,Ear & mastoid diseases,12286.0
+2001,X,Respiratory system diseases,441208.0
+2001,XI,Digestive system diseases,350247.0
+2001,XII,Skin & subcutaneous tissue,96719.0
+2001,XIII,Musculoskeletal & connective tissue,123379.0
+2001,XIV,Genitourinary system diseases,177474.0
+2001,XIX,Injury & poisoning,567305.0
+2001,XV,Pregnancy & childbirth,130877.0
+2001,XVI,Perinatal conditions,16064.0
+2001,XVII,Congenital malformations,9093.0
+2001,XVIII,Symptoms & abnormal findings,816150.0
+2001,XXI,Health services contacts,49822.0
+2002,I,Infectious & parasitic diseases,114476.0
+2002,II,Neoplasms,158767.0
+2002,III,Blood & immune disorders,49839.0
+2002,IV,"Endocrine, nutritional & metabolic",63007.0
+2002,IX,Circulatory system diseases,491366.0
+2002,V,Mental & behavioural disorders,127285.0
+2002,VI,Nervous system diseases,89440.0
+2002,VII,Eye & adnexa diseases,21984.0
+2002,VIII,Ear & mastoid diseases,12023.0
+2002,X,Respiratory system diseases,440652.0
+2002,XI,Digestive system diseases,367031.0
+2002,XII,Skin & subcutaneous tissue,101808.0
+2002,XIII,Musculoskeletal & connective tissue,131027.0
+2002,XIV,Genitourinary system diseases,184916.0
+2002,XIX,Injury & poisoning,573117.0
+2002,XV,Pregnancy & childbirth,133299.0
+2002,XVI,Perinatal conditions,17342.0
+2002,XVII,Congenital malformations,9168.0
+2002,XVIII,Symptoms & abnormal findings,817052.0
+2002,XXI,Health services contacts,49881.0
+2003,I,Infectious & parasitic diseases,112728.0
+2003,II,Neoplasms,156595.0
+2003,III,Blood & immune disorders,50657.0
+2003,IV,"Endocrine, nutritional & metabolic",66276.0
+2003,IX,Circulatory system diseases,486389.0
+2003,V,Mental & behavioural disorders,125131.0
+2003,VI,Nervous system diseases,92319.0
+2003,VII,Eye & adnexa diseases,23336.0
+2003,VIII,Ear & mastoid diseases,13058.0
+2003,X,Respiratory system diseases,485552.0
+2003,XI,Digestive system diseases,376212.0
+2003,XII,Skin & subcutaneous tissue,109247.0
+2003,XIII,Musculoskeletal & connective tissue,138786.0
+2003,XIV,Genitourinary system diseases,198160.0
+2003,XIX,Injury & poisoning,601486.0
+2003,XV,Pregnancy & childbirth,130787.0
+2003,XVI,Perinatal conditions,18094.0
+2003,XVII,Congenital malformations,9199.0
+2003,XVIII,Symptoms & abnormal findings,916072.0
+2003,XXI,Health services contacts,48650.0
+2004,I,Infectious & parasitic diseases,121102.0
+2004,II,Neoplasms,160299.0
+2004,III,Blood & immune disorders,53100.0
+2004,IV,"Endocrine, nutritional & metabolic",70854.0
+2004,IX,Circulatory system diseases,486284.0
+2004,V,Mental & behavioural disorders,129584.0
+2004,VI,Nervous system diseases,96953.0
+2004,VII,Eye & adnexa diseases,25281.0
+2004,VIII,Ear & mastoid diseases,13665.0
+2004,X,Respiratory system diseases,505423.0
+2004,XI,Digestive system diseases,409161.0
+2004,XII,Skin & subcutaneous tissue,114340.0
+2004,XIII,Musculoskeletal & connective tissue,157058.0
+2004,XIV,Genitourinary system diseases,219388.0
+2004,XIX,Injury & poisoning,642714.0
+2004,XV,Pregnancy & childbirth,139557.0
+2004,XVI,Perinatal conditions,20558.0
+2004,XVII,Congenital malformations,9458.0
+2004,XVIII,Symptoms & abnormal findings,1007296.0
+2004,XXI,Health services contacts,46605.0
+2005,I,Infectious & parasitic diseases,127766.0
+2005,II,Neoplasms,164881.0
+2005,III,Blood & immune disorders,53962.0
+2005,IV,"Endocrine, nutritional & metabolic",77422.0
+2005,IX,Circulatory system diseases,488990.0
+2005,V,Mental & behavioural disorders,128207.0
+2005,VI,Nervous system diseases,103908.0
+2005,VII,Eye & adnexa diseases,27168.0
+2005,VIII,Ear & mastoid diseases,14415.0
+2005,X,Respiratory system diseases,527758.0
+2005,XI,Digestive system diseases,431832.0
+2005,XII,Skin & subcutaneous tissue,119591.0
+2005,XIII,Musculoskeletal & connective tissue,176549.0
+2005,XIV,Genitourinary system diseases,239483.0
+2005,XIX,Injury & poisoning,699796.0
+2005,XV,Pregnancy & childbirth,147638.0
+2005,XVI,Perinatal conditions,22922.0
+2005,XVII,Congenital malformations,10014.0
+2005,XVIII,Symptoms & abnormal findings,1042597.0
+2005,XXI,Health services contacts,54155.0
+2006,I,Infectious & parasitic diseases,136370.0
+2006,II,Neoplasms,160986.0
+2006,III,Blood & immune disorders,55606.0
+2006,IV,"Endocrine, nutritional & metabolic",80305.0
+2006,IX,Circulatory system diseases,477080.0
+2006,V,Mental & behavioural disorders,123334.0
+2006,VI,Nervous system diseases,105566.0
+2006,VII,Eye & adnexa diseases,24166.0
+2006,VIII,Ear & mastoid diseases,14863.0
+2006,X,Respiratory system diseases,529614.0
+2006,XI,Digestive system diseases,438458.0
+2006,XII,Skin & subcutaneous tissue,121003.0
+2006,XIII,Musculoskeletal & connective tissue,182667.0
+2006,XIV,Genitourinary system diseases,249821.0
+2006,XIX,Injury & poisoning,720176.0
+2006,XV,Pregnancy & childbirth,146673.0
+2006,XVI,Perinatal conditions,26380.0
+2006,XVII,Congenital malformations,10471.0
+2006,XVIII,Symptoms & abnormal findings,1038227.0
+2006,XXI,Health services contacts,58251.0
+2007,I,Infectious & parasitic diseases,139958.0
+2007,II,Neoplasms,155607.0
+2007,III,Blood & immune disorders,58077.0
+2007,IV,"Endocrine, nutritional & metabolic",83510.0
+2007,IX,Circulatory system diseases,473512.0
+2007,V,Mental & behavioural disorders,119972.0
+2007,VI,Nervous system diseases,107098.0
+2007,VII,Eye & adnexa diseases,24701.0
+2007,VIII,Ear & mastoid diseases,14571.0
+2007,X,Respiratory system diseases,531611.0
+2007,XI,Digestive system diseases,449615.0
+2007,XII,Skin & subcutaneous tissue,121579.0
+2007,XIII,Musculoskeletal & connective tissue,184325.0
+2007,XIV,Genitourinary system diseases,256127.0
+2007,XIX,Injury & poisoning,734532.0
+2007,XV,Pregnancy & childbirth,149944.0
+2007,XVI,Perinatal conditions,29174.0
+2007,XVII,Congenital malformations,10326.0
+2007,XVIII,Symptoms & abnormal findings,1053277.0
+2007,XXI,Health services contacts,55852.0
+2008,I,Infectious & parasitic diseases,145156.0
+2008,II,Neoplasms,139025.0
+2008,III,Blood & immune disorders,62313.0
+2008,IV,"Endocrine, nutritional & metabolic",90635.0
+2008,IX,Circulatory system diseases,481816.0
+2008,V,Mental & behavioural disorders,120598.0
+2008,VI,Nervous system diseases,25300.0
+2008,VII,Eye & adnexa diseases,25929.0
+2008,VIII,Ear & mastoid diseases,16618.0
+2008,X,Respiratory system diseases,584412.0
+2008,XI,Digestive system diseases,465380.0
+2008,XII,Skin & subcutaneous tissue,126919.0
+2008,XIII,Musculoskeletal & connective tissue,198522.0
+2008,XIV,Genitourinary system diseases,204879.0
+2008,XIX,Injury & poisoning,750694.0
+2008,XVI,Perinatal conditions,34009.0
+2008,XVII,Congenital malformations,10419.0
+2008,XVIII,Symptoms & abnormal findings,1142162.0
+2008,XXI,Health services contacts,63432.0
+2009,I,Infectious & parasitic diseases,155959.0
+2009,II,Neoplasms,141351.0
+2009,III,Blood & immune disorders,65098.0
+2009,IV,"Endocrine, nutritional & metabolic",95288.0
+2009,IX,Circulatory system diseases,486550.0
+2009,V,Mental & behavioural disorders,129142.0
+2009,VI,Nervous system diseases,122191.0
+2009,VII,Eye & adnexa diseases,25661.0
+2009,VIII,Ear & mastoid diseases,17511.0
+2009,X,Respiratory system diseases,580584.0
+2009,XI,Digestive system diseases,489209.0
+2009,XII,Skin & subcutaneous tissue,130444.0
+2009,XIII,Musculoskeletal & connective tissue,212472.0
+2009,XIV,Genitourinary system diseases,222431.0
+2009,XIX,Injury & poisoning,799104.0
+2009,XV,Pregnancy & childbirth,467.0
+2009,XVI,Perinatal conditions,37348.0
+2009,XVII,Congenital malformations,11024.0
+2009,XVIII,Symptoms & abnormal findings,1160763.0
+2009,XXI,Health services contacts,54779.0
+2010,I,Infectious & parasitic diseases,173850.0
+2010,II,Neoplasms,136583.0
+2010,III,Blood & immune disorders,67559.0
+2010,IV,"Endocrine, nutritional & metabolic",100666.0
+2010,IX,Circulatory system diseases,486564.0
+2010,V,Mental & behavioural disorders,130633.0
+2010,VI,Nervous system diseases,123262.0
+2010,VII,Eye & adnexa diseases,25236.0
+2010,VIII,Ear & mastoid diseases,18673.0
+2010,X,Respiratory system diseases,625077.0
+2010,XI,Digestive system diseases,503023.0
+2010,XII,Skin & subcutaneous tissue,134051.0
+2010,XIII,Musculoskeletal & connective tissue,210064.0
+2010,XIV,Genitourinary system diseases,237097.0
+2010,XIX,Injury & poisoning,806221.0
+2010,XV,Pregnancy & childbirth,347.0
+2010,XVI,Perinatal conditions,39331.0
+2010,XVII,Congenital malformations,10787.0
+2010,XVIII,Symptoms & abnormal findings,1177644.0
+2010,XXI,Health services contacts,48774.0
+2011,I,Infectious & parasitic diseases,173791.0
+2011,II,Neoplasms,135431.0
+2011,III,Blood & immune disorders,68395.0
+2011,IV,"Endocrine, nutritional & metabolic",101464.0
+2011,IX,Circulatory system diseases,491614.0
+2011,V,Mental & behavioural disorders,131980.0
+2011,VI,Nervous system diseases,122110.0
+2011,VII,Eye & adnexa diseases,23642.0
+2011,VIII,Ear & mastoid diseases,17635.0
+2011,X,Respiratory system diseases,607101.0
+2011,XI,Digestive system diseases,514734.0
+2011,XII,Skin & subcutaneous tissue,133729.0
+2011,XIII,Musculoskeletal & connective tissue,201409.0
+2011,XIV,Genitourinary system diseases,247726.0
+2011,XIX,Injury & poisoning,804423.0
+2011,XV,Pregnancy & childbirth,282.0
+2011,XVI,Perinatal conditions,39949.0
+2011,XVII,Congenital malformations,10447.0
+2011,XVIII,Symptoms & abnormal findings,1144404.0
+2011,XXI,Health services contacts,44381.0
+2012,I,Infectious & parasitic diseases,282611.0
+2012,II,Neoplasms,141833.0
+2012,III,Blood & immune disorders,66447.0
+2012,IV,"Endocrine, nutritional & metabolic",104314.0
+2012,IX,Circulatory system diseases,498497.0
+2012,V,Mental & behavioural disorders,134276.0
+2012,VI,Nervous system diseases,121272.0
+2012,VII,Eye & adnexa diseases,25314.0
+2012,VIII,Ear & mastoid diseases,18205.0
+2012,X,Respiratory system diseases,677856.0
+2012,XI,Digestive system diseases,456395.0
+2012,XII,Skin & subcutaneous tissue,135478.0
+2012,XIII,Musculoskeletal & connective tissue,202179.0
+2012,XIV,Genitourinary system diseases,270447.0
+2012,XIX,Injury & poisoning,766696.0
+2012,XV,Pregnancy & childbirth,346.0
+2012,XVI,Perinatal conditions,42244.0
+2012,XVII,Congenital malformations,10399.0
+2012,XVIII,Symptoms & abnormal findings,1138627.0
+2012,XXI,Health services contacts,39129.0
+2013,I,Infectious & parasitic diseases,265891.0
+2013,II,Neoplasms,127425.0
+2013,III,Blood & immune disorders,64057.0
+2013,IV,"Endocrine, nutritional & metabolic",108738.0
+2013,IX,Circulatory system diseases,507245.0
+2013,V,Mental & behavioural disorders,136943.0
+2013,VI,Nervous system diseases,122979.0
+2013,VII,Eye & adnexa diseases,25610.0
+2013,VIII,Ear & mastoid diseases,18786.0
+2013,X,Respiratory system diseases,665257.0
+2013,XI,Digestive system diseases,474850.0
+2013,XII,Skin & subcutaneous tissue,144744.0
+2013,XIII,Musculoskeletal & connective tissue,211728.0
+2013,XIV,Genitourinary system diseases,285423.0
+2013,XIX,Injury & poisoning,799015.0
+2013,XV,Pregnancy & childbirth,326.0
+2013,XVI,Perinatal conditions,43343.0
+2013,XVII,Congenital malformations,10028.0
+2013,XVIII,Symptoms & abnormal findings,1152875.0
+2013,XXI,Health services contacts,39538.0
+2014,I,Infectious & parasitic diseases,284102.0
+2014,II,Neoplasms,131805.0
+2014,III,Blood & immune disorders,65770.0
+2014,IV,"Endocrine, nutritional & metabolic",114401.0
+2014,IX,Circulatory system diseases,517691.0
+2014,V,Mental & behavioural disorders,139434.0
+2014,VI,Nervous system diseases,127504.0
+2014,VII,Eye & adnexa diseases,26858.0
+2014,VIII,Ear & mastoid diseases,20433.0
+2014,X,Respiratory system diseases,748834.0
+2014,XI,Digestive system diseases,491775.0
+2014,XII,Skin & subcutaneous tissue,154567.0
+2014,XIII,Musculoskeletal & connective tissue,224061.0
+2014,XIV,Genitourinary system diseases,304360.0
+2014,XIX,Injury & poisoning,803159.0
+2014,XV,Pregnancy & childbirth,374.0
+2014,XVI,Perinatal conditions,45317.0
+2014,XVII,Congenital malformations,10066.0
+2014,XVIII,Symptoms & abnormal findings,1152464.0
+2014,XXI,Health services contacts,40626.0
+2015,I,Infectious & parasitic diseases,306087.0
+2015,II,Neoplasms,130092.0
+2015,III,Blood & immune disorders,69175.0
+2015,IV,"Endocrine, nutritional & metabolic",120662.0
+2015,IX,Circulatory system diseases,535875.0
+2015,V,Mental & behavioural disorders,142234.0
+2015,VI,Nervous system diseases,129705.0
+2015,VII,Eye & adnexa diseases,27693.0
+2015,VIII,Ear & mastoid diseases,22368.0
+2015,X,Respiratory system diseases,791063.0
+2015,XI,Digestive system diseases,508708.0
+2015,XII,Skin & subcutaneous tissue,164045.0
+2015,XIII,Musculoskeletal & connective tissue,239847.0
+2015,XIV,Genitourinary system diseases,314994.0
+2015,XIX,Injury & poisoning,798070.0
+2015,XV,Pregnancy & childbirth,382.0
+2015,XVI,Perinatal conditions,48050.0
+2015,XVII,Congenital malformations,10390.0
+2015,XVIII,Symptoms & abnormal findings,1149783.0
+2015,XXI,Health services contacts,38723.0
+2016,I,Infectious & parasitic diseases,334413.0
+2016,II,Neoplasms,131575.0
+2016,III,Blood & immune disorders,72289.0
+2016,IV,"Endocrine, nutritional & metabolic",126683.0
+2016,IX,Circulatory system diseases,541330.0
+2016,V,Mental & behavioural disorders,136393.0
+2016,VI,Nervous system diseases,127268.0
+2016,VII,Eye & adnexa diseases,28866.0
+2016,VIII,Ear & mastoid diseases,24073.0
+2016,X,Respiratory system diseases,840118.0
+2016,XI,Digestive system diseases,520928.0
+2016,XII,Skin & subcutaneous tissue,172446.0
+2016,XIII,Musculoskeletal & connective tissue,248426.0
+2016,XIV,Genitourinary system diseases,329101.0
+2016,XIX,Injury & poisoning,792228.0
+2016,XVI,Perinatal conditions,50102.0
+2016,XVII,Congenital malformations,10207.0
+2016,XVIII,Symptoms & abnormal findings,1137607.0
+2016,XXI,Health services contacts,39671.0
+2017,I,Infectious & parasitic diseases,443873.0
+2017,II,Neoplasms,130568.0
+2017,III,Blood & immune disorders,75214.0
+2017,IV,"Endocrine, nutritional & metabolic",134706.0
+2017,IX,Circulatory system diseases,556544.0
+2017,V,Mental & behavioural disorders,137986.0
+2017,VI,Nervous system diseases,128769.0
+2017,VII,Eye & adnexa diseases,30242.0
+2017,VIII,Ear & mastoid diseases,26626.0
+2017,X,Respiratory system diseases,867886.0
+2017,XI,Digestive system diseases,525133.0
+2017,XII,Skin & subcutaneous tissue,177799.0
+2017,XIII,Musculoskeletal & connective tissue,265562.0
+2017,XIV,Genitourinary system diseases,295254.0
+2017,XIX,Injury & poisoning,808251.0
+2017,XV,Pregnancy & childbirth,286.0
+2017,XVI,Perinatal conditions,49715.0
+2017,XVII,Congenital malformations,10234.0
+2017,XVIII,Symptoms & abnormal findings,1173071.0
+2017,XXI,Health services contacts,40511.0
+2018,I,Infectious & parasitic diseases,416217.0
+2018,II,Neoplasms,131451.0
+2018,III,Blood & immune disorders,81625.0
+2018,IV,"Endocrine, nutritional & metabolic",144607.0
+2018,IX,Circulatory system diseases,573573.0
+2018,V,Mental & behavioural disorders,145554.0
+2018,VI,Nervous system diseases,134687.0
+2018,VII,Eye & adnexa diseases,31775.0
+2018,VIII,Ear & mastoid diseases,29714.0
+2018,X,Respiratory system diseases,892913.0
+2018,XI,Digestive system diseases,563562.0
+2018,XII,Skin & subcutaneous tissue,195516.0
+2018,XIII,Musculoskeletal & connective tissue,292172.0
+2018,XIV,Genitourinary system diseases,326990.0
+2018,XIX,Injury & poisoning,839407.0
+2018,XVI,Perinatal conditions,50818.0
+2018,XVII,Congenital malformations,10287.0
+2018,XVIII,Symptoms & abnormal findings,1299363.0
+2018,XXI,Health services contacts,43637.0
+2019,I,Infectious & parasitic diseases,393701.0
+2019,II,Neoplasms,132842.0
+2019,III,Blood & immune disorders,85140.0
+2019,IV,"Endocrine, nutritional & metabolic",151740.0
+2019,IX,Circulatory system diseases,595834.0
+2019,V,Mental & behavioural disorders,146042.0
+2019,VI,Nervous system diseases,137294.0
+2019,VII,Eye & adnexa diseases,34439.0
+2019,VIII,Ear & mastoid diseases,31617.0
+2019,X,Respiratory system diseases,929878.0
+2019,XI,Digestive system diseases,581043.0
+2019,XII,Skin & subcutaneous tissue,205483.0
+2019,XIII,Musculoskeletal & connective tissue,303196.0
+2019,XIV,Genitourinary system diseases,326636.0
+2019,XIX,Injury & poisoning,840723.0
+2019,XV,Pregnancy & childbirth,9772.0
+2019,XVI,Perinatal conditions,51897.0
+2019,XVII,Congenital malformations,10622.0
+2019,XVIII,Symptoms & abnormal findings,1253459.0
+2019,XXI,Health services contacts,47431.0
+2020,I,Infectious & parasitic diseases,228302.0
+2020,II,Neoplasms,125837.0
+2020,III,Blood & immune disorders,77684.0
+2020,IV,"Endocrine, nutritional & metabolic",141763.0
+2020,IX,Circulatory system diseases,556810.0
+2020,V,Mental & behavioural disorders,135533.0
+2020,VI,Nervous system diseases,125761.0
+2020,VII,Eye & adnexa diseases,25001.0
+2020,VIII,Ear & mastoid diseases,22760.0
+2020,X,Respiratory system diseases,413473.0
+2020,XI,Digestive system diseases,538048.0
+2020,XII,Skin & subcutaneous tissue,151583.0
+2020,XIII,Musculoskeletal & connective tissue,260253.0
+2020,XIV,Genitourinary system diseases,266209.0
+2020,XIX,Injury & poisoning,723264.0
+2020,XV,Pregnancy & childbirth,7893.0
+2020,XVI,Perinatal conditions,45511.0
+2020,XVII,Congenital malformations,10089.0
+2020,XVIII,Symptoms & abnormal findings,1094609.0
+2020,XXI,Health services contacts,44301.0
+2021,I,Infectious & parasitic diseases,335182.0
+2021,II,Neoplasms,145637.0
+2021,III,Blood & immune disorders,96859.0
+2021,IV,"Endocrine, nutritional & metabolic",161308.0
+2021,IX,Circulatory system diseases,619283.0
+2021,V,Mental & behavioural disorders,133654.0
+2021,VI,Nervous system diseases,137572.0
+2021,VII,Eye & adnexa diseases,29976.0
+2021,VIII,Ear & mastoid diseases,29653.0
+2021,X,Respiratory system diseases,670901.0
+2021,XI,Digestive system diseases,587214.0
+2021,XII,Skin & subcutaneous tissue,177999.0
+2021,XIII,Musculoskeletal & connective tissue,306329.0
+2021,XIV,Genitourinary system diseases,391019.0
+2021,XIX,Injury & poisoning,766333.0
+2021,XV,Pregnancy & childbirth,138093.0
+2021,XVI,Perinatal conditions,50304.0
+2021,XVII,Congenital malformations,10463.0
+2021,XVIII,Symptoms & abnormal findings,1235743.0
+2021,XXI,Health services contacts,50092.0
+2022,I,Infectious & parasitic diseases,335443.0
+2022,II,Neoplasms,140868.0
+2022,III,Blood & immune disorders,99069.0
+2022,IV,"Endocrine, nutritional & metabolic",161118.0
+2022,IX,Circulatory system diseases,595461.0
+2022,V,Mental & behavioural disorders,114666.0
+2022,VI,Nervous system diseases,122300.0
+2022,VII,Eye & adnexa diseases,31511.0
+2022,VIII,Ear & mastoid diseases,31968.0
+2022,X,Respiratory system diseases,802756.0
+2022,XI,Digestive system diseases,565132.0
+2022,XII,Skin & subcutaneous tissue,186931.0
+2022,XIII,Musculoskeletal & connective tissue,281562.0
+2022,XIV,Genitourinary system diseases,383477.0
+2022,XIX,Injury & poisoning,704933.0
+2022,XV,Pregnancy & childbirth,137330.0
+2022,XVI,Perinatal conditions,49914.0
+2022,XVII,Congenital malformations,10171.0
+2022,XVIII,Symptoms & abnormal findings,1159635.0
+2022,XXI,Health services contacts,50513.0
+2023,I,Infectious & parasitic diseases,352559.0
+2023,II,Neoplasms,143624.0
+2023,III,Blood & immune disorders,104514.0
+2023,IV,"Endocrine, nutritional & metabolic",171766.0
+2023,IX,Circulatory system diseases,639908.0
+2023,V,Mental & behavioural disorders,120646.0
+2023,VI,Nervous system diseases,134971.0
+2023,VII,Eye & adnexa diseases,33320.0
+2023,VIII,Ear & mastoid diseases,36364.0
+2023,X,Respiratory system diseases,868212.0
+2023,XI,Digestive system diseases,619962.0
+2023,XII,Skin & subcutaneous tissue,206898.0
+2023,XIII,Musculoskeletal & connective tissue,314071.0
+2023,XIV,Genitourinary system diseases,417186.0
+2023,XIX,Injury & poisoning,739226.0
+2023,XV,Pregnancy & childbirth,151581.0
+2023,XVI,Perinatal conditions,52590.0
+2023,XVII,Congenital malformations,10722.0
+2023,XVIII,Symptoms & abnormal findings,1307050.0
+2023,XXI,Health services contacts,57791.0
