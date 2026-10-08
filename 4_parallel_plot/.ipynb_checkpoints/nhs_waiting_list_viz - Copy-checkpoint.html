@@ -1,0 +1,280 @@
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NHS Waiting List Pressure by Diagnosis Category</title>
+
+<style>
+* {{ box-sizing: border-box; margin: 0; padding: 0; }}
+
+body {{
+  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: #222;
+}}
+
+header {{
+  padding: 18px 28px 10px;
+  border-bottom: 1px solid #ddd;
+}}
+
+header h1 {{
+  font-size: 18px;
+  font-weight: 600;
+}}
+
+header .sub {{
+  font-size: 12px;
+  color: #555;
+  margin-top: 4px;
+}}
+
+#controls {{
+  display: flex;
+  gap: 8px;
+  padding: 10px 28px;
+  border-bottom: 1px solid #eee;
+}}
+
+.btn, .lvl-btn {{
+  padding: 3px 8px;
+  font-size: 11px;
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+  cursor: pointer;
+}}
+
+.btn.active, .lvl-btn.active {{
+  background: #e5e5e5;
+}}
+
+#lvl-toggle {{
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}}
+
+#main {{
+  display: flex;
+  height: calc(100vh - 110px);
+}}
+
+#chart {{
+  flex: 1;
+  position: relative;
+}}
+
+svg {{
+  width: 100%;
+  height: 100%;
+}}
+
+.axis {{
+  stroke: #888;
+  stroke-width: 1;
+}}
+
+.grid {{
+  stroke: #e5e5e5;
+  stroke-width: 1;
+}}
+
+.alabel {{
+  font-size: 11px;
+  fill: #333;
+  font-weight: 600;
+  text-anchor: middle;
+}}
+
+.aunit {{
+  font-size: 9px;
+  fill: #777;
+  text-anchor: middle;
+}}
+
+.tlabel {{
+  font-size: 9px;
+  fill: #777;
+  text-anchor: middle;
+}}
+
+.cline {{
+  fill: none;
+  stroke-width: 1.8;
+  stroke-opacity: 0.65;
+}}
+
+.cline:hover {{
+  stroke-opacity: 1;
+  stroke-width: 2.5;
+}}
+
+.cline.dim {{
+  stroke-opacity: 0.08;
+}}
+
+.sline {{
+  fill: none;
+  stroke-width: 1;
+  stroke-opacity: 0.35;
+}}
+
+.sline.dim {{
+  stroke-opacity: 0.05;
+}}
+
+#tt {{
+  position: absolute;
+  display: none;
+  background: #ffffff;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 11px;
+  max-width: 250px;
+}}
+
+#sidebar {{
+  width: 180px;
+  padding: 12px;
+  border-left: 1px solid #eee;
+  background: #fafafa;
+}}
+
+.li {{
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px;
+  cursor: pointer;
+}}
+
+.li.off {{
+  opacity: 0.3;
+}}
+
+.dot {{
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}}
+
+.lname {{
+  font-size: 10px;
+}}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>NHS Waiting List Pressure by Diagnosis Category</h1>
+  <div class="sub">
+    Parallel coordinates visualisation of admissions, waiting times and backlog growth (England, 2014–2024)
+  </div>
+</header>
+
+<div id="controls">
+  <label style="font-size:11px;color:#666;">Highlight:</label>
+  <button class="btn active" data-f="all">All</button>
+  <button class="btn" data-f="mental">Mental Health</button>
+  <button class="btn" data-f="musculo">Musculoskeletal</button>
+
+  <div id="lvl-toggle">
+    <span style="font-size:11px;color:#666;">Show:</span>
+    <button class="lvl-btn active" id="btn-ch">Chapters</button>
+    <button class="lvl-btn" id="btn-sub">Subcategories</button>
+  </div>
+</div>
+
+<div id="main">
+  <div id="chart">
+    <svg id="svg"></svg>
+    <div id="tt"></div>
+  </div>
+  <div id="sidebar"><div id="sb-body"></div></div>
+</div>
+
+<script>
+const CHAPTERS = {json.dumps(data['chapters'])};
+const SUBS = {json.dumps(data['subcategories'])};
+
+const COLORS = {{
+  'Mental & Behavioural':'#666',
+  'Musculoskeletal':'#999'
+}};
+
+const AXES = [
+  {{key:'log_admissions', label:'Admissions', fmt:v=>Math.round(Math.pow(10,v)).toLocaleString()}},
+  {{key:'waiting_list', label:'Waiting List', fmt:v=>Math.round(v/1000)+'k'}},
+  {{key:'mean_wait', label:'Wait (days)', fmt:v=>v.toFixed(0)}},
+  {{key:'mean_los', label:'Length of Stay', fmt:v=>v.toFixed(1)}},
+  {{key:'emergency_rate', label:'Emergency %', fmt:v=>v.toFixed(0)+'%'}},
+  {{key:'waitlist_growth', label:'Growth %', fmt:v=>v.toFixed(0)+'%'}}
+];
+
+let activeFilter='all', showSubs=false;
+
+const svgEl=document.getElementById('svg');
+const ttEl=document.getElementById('tt');
+const chartEl=document.getElementById('chart');
+
+function passes(d){{
+  if(activeFilter==='mental') return d.chapter==='Mental & Behavioural';
+  if(activeFilter==='musculo') return d.chapter==='Musculoskeletal';
+  return true;
+}}
+
+function render(){{
+  const W=chartEl.clientWidth, H=chartEl.clientHeight;
+  const iH=H-90;
+  const xPos=AXES.map((_,i)=>40+i/(AXES.length-1)*(W-80));
+
+  let html='';
+
+  AXES.forEach((ax,i)=>{{
+    const x=xPos[i];
+    html+=`<line class="axis" x1="${{x}}" y1="50" x2="${{x}}" y2="${{H-40}}"/>`;
+    html+=`<text class="alabel" x="${{x}}" y="30">${{ax.label}}</text>`;
+  }});
+
+  const data = showSubs ? [...CHAPTERS,...SUBS] : CHAPTERS;
+
+  const scales={{}};
+  AXES.forEach(ax=>{{
+    const vals=data.map(d=>d[ax.key]);
+    scales[ax.key]={{min:Math.min(...vals), max:Math.max(...vals)}};
+  }});
+
+  function y(ax,val){{
+    const s=scales[ax.key];
+    return 50+iH-(val-s.min)/(s.max-s.min)*iH;
+  }}
+
+  data.filter(passes).forEach(d=>{{
+    let path='M';
+    AXES.forEach((ax,i)=>{{
+      path+=`${{xPos[i]}},${{y(ax,d[ax.key])}} `;
+    }});
+    html+=`<path class="cline" d="${{path}}" stroke="${{COLORS[d.chapter]||'#bbb'}}"/>`;
+  }});
+
+  svgEl.innerHTML=html;
+}}
+
+document.querySelectorAll('.btn').forEach(b=>{{
+  b.onclick=()=>{{
+    document.querySelectorAll('.btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    activeFilter=b.dataset.f;
+    render();
+  }}
+}});
+
+document.getElementById('btn-ch').onclick=()=>{{showSubs=false;render();}}
+document.getElementById('btn-sub').onclick=()=>{{showSubs=true;render();}}
+
+render();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NHS Waiting List Pressure — Parallel Coordinates</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "Segoe UI", sans-serif; background: #0b0f1a; color: #e2e8f0; }
+header { padding: 14px 26px 10px; background: linear-gradient(90deg,#0b0f1a,#111827); border-bottom: 1px solid #1e2d3d; }
+header h1 { font-size: 16px; font-weight: 700; color: #f1f5f9; }
+header .sub { font-size: 11.5px; color: #64748b; margin-top:3px; font-style:italic; }
+header .meta { font-size: 10px; color: #475569; margin-top:2px; }
+#controls { display:flex; flex-wrap:wrap; gap:7px; align-items:center; padding:7px 26px; background:#0f172a; border-bottom:1px solid #1e2d3d; }
+#controls label { font-size:11px; color:#64748b; }
+.btn { padding:3px 11px; border-radius:20px; border:1px solid #1e2d3d; background:#1e293b; color:#94a3b8; font-size:11px; cursor:pointer; transition:all .15s; }
+.btn.active { background:#431407; border-color:#f97316; color:#fdba74; }
+.btn:hover { border-color:#475569; }
+#lvl-toggle { display:flex; gap:5px; margin-left:auto; }
+.lvl-btn { padding:3px 11px; border-radius:20px; border:1px solid #1e2d3d; background:#1e293b; color:#94a3b8; font-size:11px; cursor:pointer; }
+.lvl-btn.active { background:#14532d; border-color:#22c55e; color:#86efac; }
+#count { font-size:11px; color:#475569; }
+#main { display:flex; height:calc(100vh - 112px); }
+#chart { flex:1; position:relative; overflow:hidden; }
+svg { width:100%; height:100%; }
+.grid { stroke:#1e293b; stroke-width:1; stroke-dasharray:3,6; }
+.axis { stroke:#334155; stroke-width:1.5; }
+.tick { stroke:#334155; stroke-width:1; }
+.alabel { font-size:11.5px; fill:#cbd5e1; font-weight:700; text-anchor:middle; }
+.aunit { font-size:9px; fill:#475569; text-anchor:middle; }
+.tlabel { font-size:8.5px; fill:#475569; text-anchor:middle; }
+.cline { fill:none; stroke-width:2.8; stroke-opacity:.75; cursor:pointer; transition:stroke-opacity .1s,stroke-width .1s; }
+.cline:hover,.cline.pin { stroke-opacity:1; stroke-width:4; filter:drop-shadow(0 0 4px currentColor); }
+.cline.dim { stroke-opacity:.05; pointer-events:none; }
+.sline { fill:none; stroke-width:1.2; stroke-opacity:.5; stroke-dasharray:5,3; cursor:pointer; transition:stroke-opacity .1s,stroke-width .1s; }
+.sline:hover,.sline.pin { stroke-opacity:.95; stroke-width:2; }
+.sline.dim { stroke-opacity:.04; pointer-events:none; }
+#tt { position:absolute; pointer-events:none; display:none; background:#0f172a; border:1px solid #1e2d3d; border-radius:10px; padding:12px 16px; font-size:12px; max-width:295px; z-index:99; box-shadow:0 12px 40px rgba(0,0,0,.7); }
+.tt-title { font-weight:700; color:#f1f5f9; font-size:13px; margin-bottom:3px; line-height:1.35; }
+.tt-code { font-size:10px; margin-bottom:8px; }
+.tt-row { display:flex; justify-content:space-between; gap:16px; color:#64748b; margin:3px 0; font-size:11.5px; }
+.tt-val { color:#e2e8f0; font-weight:600; }
+.tt-type { display:inline-block; padding:1px 7px; border-radius:8px; font-size:9.5px; margin-top:6px; }
+#sidebar { width:185px; padding:12px 10px; background:#0f172a; border-left:1px solid #1e2d3d; overflow-y:auto; flex-shrink:0; }
+#sidebar h3 { font-size:10px; color:#475569; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+.li { display:flex; align-items:center; gap:7px; padding:3px 5px; border-radius:5px; cursor:pointer; margin-bottom:2px; transition:background .1s; }
+.li:hover { background:#1e293b; }
+.li.off { opacity:.25; }
+.dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.lname { font-size:10px; color:#cbd5e1; flex:1; line-height:1.3; }
+#infobar { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); background:#0f172acc; border:1px solid #1e293b; border-radius:6px; padding:4px 12px; font-size:10px; color:#475569; pointer-events:none; white-space:nowrap; }
+</style>
+</head>
+<body>
+<header>
+  <h1>NHS Hospital Admissions — Waiting List Pressure by Diagnosis Chapter</h1>
+  <div class="sub">Which admission categories place the greatest pressure on NHS waiting lists, and has this grown over 10 years?</div>
+  <div class="meta">Primary Diagnosis Summary · England · 2014–2024 · 16 ICD Chapters + top 3 subcategories · Source: NHS Digital / ONS HES</div>
+</header>
+<div id="controls">
+  <label>Filter:</label>
+  <button class="btn active" data-f="all">All Chapters</button>
+  <button class="btn" data-f="high-wait">Long Wait (&gt;100d)</button>
+  <button class="btn" data-f="high-emerg">High Emergency (&gt;70%)</button>
+  <button class="btn" data-f="mental">Mental Health</button>
+  <button class="btn" data-f="musculo">Musculoskeletal</button>
+  <button class="btn" data-f="growing">Growing Backlog</button>
+  <div id="lvl-toggle">
+    <span style="font-size:11px;color:#64748b;align-self:center">Show:</span>
+    <button class="lvl-btn active" id="btn-ch">Chapters</button>
+    <button class="lvl-btn" id="btn-sub">+ Subcategories</button>
+  </div>
+  <span id="count"></span>
+</div>
+<div id="main">
+  <div id="chart">
+    <svg id="svg"></svg>
+    <div id="tt"></div>
+    <div id="infobar">Hover a line for details · Click to pin · Toggle subcategories top-right · Click legend to isolate chapter</div>
+  </div>
+  <div id="sidebar"><h3>ICD Chapter</h3><div id="sb-body"></div></div>
+</div>
+<script>
+const CHAPTERS = [{"type": "chapter", "code": "Circulatory", "description": "Circulatory", "full_description": "Circulatory", "chapter": "Circulatory", "log_admissions": 6.0, "admissions": 993424, "waiting_list": 274790, "mean_wait": 66.6, "mean_los": 7.3, "emergency_rate": 64.4, "waitlist_growth": -24.6}, {"type": "chapter", "code": "Digestive", "description": "Digestive", "full_description": "Digestive", "chapter": "Digestive", "log_admissions": 6.37, "admissions": 2345848, "waiting_list": 1437642, "mean_wait": 83.1, "mean_los": 5.2, "emergency_rate": 26.4, "waitlist_growth": 16.7}, {"type": "chapter", "code": "Endocrine & Metabolic", "description": "Endocrine & Metabolic", "full_description": "Endocrine & Metabolic", "chapter": "Endocrine & Metabolic", "log_admissions": 5.57, "admissions": 372961, "waiting_list": 105090, "mean_wait": 79.9, "mean_los": 7.5, "emergency_rate": 46.1, "waitlist_growth": 83.3}, {"type": "chapter", "code": "Eye / Ear", "description": "Eye / Ear", "full_description": "Eye / Ear", "chapter": "Eye / Ear", "log_admissions": 6.05, "admissions": 1112460, "waiting_list": 832294, "mean_wait": 107.4, "mean_los": 1.8, "emergency_rate": 6.3, "waitlist_growth": 24.3}, {"type": "chapter", "code": "Genitourinary", "description": "Genitourinary", "full_description": "Genitourinary", "chapter": "Genitourinary", "log_admissions": 5.96, "admissions": 908713, "waiting_list": 414051, "mean_wait": 98.3, "mean_los": 3.4, "emergency_rate": 45.9, "waitlist_growth": -9.9}, {"type": "chapter", "code": "Health Status & Contact", "description": "Health Status & Contact", "full_description": "Health Status & Contact", "chapter": "Health Status & Contact", "log_admissions": 5.95, "admissions": 900478, "waiting_list": 228467, "mean_wait": 71.4, "mean_los": 5.0, "emergency_rate": 6.4, "waitlist_growth": -11.4}, {"type": "chapter", "code": "Infectious & Parasitic", "description": "Infectious & Parasitic", "full_description": "Infectious & Parasitic", "chapter": "Infectious & Parasitic", "log_admissions": 5.61, "admissions": 405751, "waiting_list": 41286, "mean_wait": 30.9, "mean_los": 6.3, "emergency_rate": 86.9, "waitlist_growth": -21.6}, {"type": "chapter", "code": "Injury & Poisoning", "description": "Injury & Poisoning", "full_description": "Injury & Poisoning", "chapter": "Injury & Poisoning", "log_admissions": 5.99, "admissions": 968767, "waiting_list": 170449, "mean_wait": 44.7, "mean_los": 6.2, "emergency_rate": 76.3, "waitlist_growth": 11.8}, {"type": "chapter", "code": "Mental & Behavioural", "description": "Mental & Behavioural", "full_description": "Mental & Behavioural", "chapter": "Mental & Behavioural", "log_admissions": 5.15, "admissions": 140611, "waiting_list": 9352, "mean_wait": 72.2, "mean_los": 40.0, "emergency_rate": 85.8, "waitlist_growth": -27.9}, {"type": "chapter", "code": "Musculoskeletal", "description": "Musculoskeletal", "full_description": "Musculoskeletal", "chapter": "Musculoskeletal", "log_admissions": 6.07, "admissions": 1185879, "waiting_list": 711895, "mean_wait": 140.8, "mean_los": 6.8, "emergency_rate": 26.5, "waitlist_growth": -21.5}, {"type": "chapter", "code": "Neoplasms", "description": "Neoplasms", "full_description": "Neoplasms", "chapter": "Neoplasms", "log_admissions": 6.45, "admissions": 2816384, "waiting_list": 1420324, "mean_wait": 47.1, "mean_los": 5.7, "emergency_rate": 8.8, "waitlist_growth": 49.0}, {"type": "chapter", "code": "Nervous System", "description": "Nervous System", "full_description": "Nervous System", "chapter": "Nervous System", "log_admissions": 5.59, "admissions": 387928, "waiting_list": 153137, "mean_wait": 81.4, "mean_los": 13.5, "emergency_rate": 34.8, "waitlist_growth": 2.0}, {"type": "chapter", "code": "Pregnancy & Childbirth", "description": "Pregnancy & Childbirth", "full_description": "Pregnancy & Childbirth", "chapter": "Pregnancy & Childbirth", "log_admissions": 6.11, "admissions": 1273807, "waiting_list": 66154, "mean_wait": 18.2, "mean_los": 1.3, "emergency_rate": 11.9, "waitlist_growth": -11.5}, {"type": "chapter", "code": "Respiratory", "description": "Respiratory", "full_description": "Respiratory", "chapter": "Respiratory", "log_admissions": 6.02, "admissions": 1054030, "waiting_list": 145048, "mean_wait": 70.2, "mean_los": 7.0, "emergency_rate": 82.4, "waitlist_growth": -3.5}, {"type": "chapter", "code": "Skin", "description": "Skin", "full_description": "Skin", "chapter": "Skin", "log_admissions": 5.6, "admissions": 399877, "waiting_list": 166100, "mean_wait": 63.1, "mean_los": 5.0, "emergency_rate": 51.7, "waitlist_growth": 20.2}, {"type": "chapter", "code": "Symptoms & Signs", "description": "Symptoms & Signs", "full_description": "Symptoms & Signs", "chapter": "Symptoms & Signs", "log_admissions": 6.28, "admissions": 1907326, "waiting_list": 455036, "mean_wait": 51.0, "mean_los": 2.8, "emergency_rate": 68.5, "waitlist_growth": 8.2}];
+const SUBS = [{"type": "sub", "code": "I30-I52", "description": "Other forms of heart disease", "full_description": "Other forms of heart disease", "chapter": "Circulatory", "log_admissions": 5.53, "admissions": 342471, "waiting_list": 101455, "mean_wait": 92.8, "mean_los": 6.8, "emergency_rate": 63.9, "waitlist_growth": 28.5}, {"type": "sub", "code": "I20-I25", "description": "Ischaemic heart diseases", "full_description": "Ischaemic heart diseases", "chapter": "Circulatory", "log_admissions": 5.35, "admissions": 225279, "waiting_list": 72659, "mean_wait": 68.6, "mean_los": 5.5, "emergency_rate": 59.3, "waitlist_growth": -33.2}, {"type": "sub", "code": "I80-I89", "description": "Diseases of veins & lymphatic system nec.", "full_description": "Diseases of veins & lymphatic system nec.", "chapter": "Circulatory", "log_admissions": 5.12, "admissions": 130554, "waiting_list": 45708, "mean_wait": 114.4, "mean_los": 4.0, "emergency_rate": 59.0, "waitlist_growth": -62.6}, {"type": "sub", "code": "K55-K64", "description": "Other diseases of intestines", "full_description": "Other diseases of intestines", "chapter": "Digestive", "log_admissions": 5.81, "admissions": 651142, "waiting_list": 421362, "mean_wait": 57.6, "mean_los": 4.7, "emergency_rate": 27.1, "waitlist_growth": 0}, {"type": "sub", "code": "K20-K31", "description": "Diseases of oesophagus, stomach & duodenum", "full_description": "Diseases of oesophagus, stomach & duodenum", "chapter": "Digestive", "log_admissions": 5.65, "admissions": 447856, "waiting_list": 322959, "mean_wait": 43.7, "mean_los": 3.9, "emergency_rate": 15.2, "waitlist_growth": 2.8}, {"type": "sub", "code": "K50-K52", "description": "Noninfective enteritis & colitis", "full_description": "Noninfective enteritis & colitis", "chapter": "Digestive", "log_admissions": 5.55, "admissions": 358063, "waiting_list": 189128, "mean_wait": 76.1, "mean_los": 6.3, "emergency_rate": 8.8, "waitlist_growth": 130.1}, {"type": "sub", "code": "E70-E90", "description": "Metabolic disorders", "full_description": "Metabolic disorders", "chapter": "Endocrine & Metabolic", "log_admissions": 5.33, "admissions": 213450, "waiting_list": 51860, "mean_wait": 86.6, "mean_los": 5.1, "emergency_rate": 41.2, "waitlist_growth": 0}, {"type": "sub", "code": "E20-E35", "description": "Disorders of other endocrine glands", "full_description": "Disorders of other endocrine glands", "chapter": "Endocrine & Metabolic", "log_admissions": 4.53, "admissions": 34006, "waiting_list": 17995, "mean_wait": 85.5, "mean_los": 5.0, "emergency_rate": 19.4, "waitlist_growth": 0}, {"type": "sub", "code": "E00-E07", "description": "Disorders of thyroid gland", "full_description": "Disorders of thyroid gland", "chapter": "Endocrine & Metabolic", "log_admissions": 4.27, "admissions": 18577, "waiting_list": 11600, "mean_wait": 108.0, "mean_los": 2.9, "emergency_rate": 25.4, "waitlist_growth": 13.7}, {"type": "sub", "code": "H25-H28", "description": "Disorders of lens (including cataracts)", "full_description": "Disorders of lens (including cataracts)", "chapter": "Eye / Ear", "log_admissions": 5.87, "admissions": 747756, "waiting_list": 618390, "mean_wait": 64.8, "mean_los": 1.3, "emergency_rate": 0.1, "waitlist_growth": 53.1}, {"type": "sub", "code": "H30-H36", "description": "Disorders of choroid and retina", "full_description": "Disorders of choroid and retina", "chapter": "Eye / Ear", "log_admissions": 5.17, "admissions": 149433, "waiting_list": 71277, "mean_wait": 61.0, "mean_los": 1.0, "emergency_rate": 4.9, "waitlist_growth": 0}, {"type": "sub", "code": "H00-H06", "description": "Disorders of eyelid, lacrimal system and orbit", "full_description": "Disorders of eyelid, lacrimal system and orbit", "chapter": "Eye / Ear", "log_admissions": 4.71, "admissions": 50937, "waiting_list": 41527, "mean_wait": 113.3, "mean_los": 2.2, "emergency_rate": 13.3, "waitlist_growth": 0}, {"type": "sub", "code": "N80-N98", "description": "Noninflammatory disorders of female genital tract", "full_description": "Noninflammatory disorders of female genital tract", "chapter": "Genitourinary", "log_admissions": 5.29, "admissions": 194618, "waiting_list": 137880, "mean_wait": 111.0, "mean_los": 1.4, "emergency_rate": 24.9, "waitlist_growth": -26.9}, {"type": "sub", "code": "N40-N51", "description": "Diseases of male genital organs", "full_description": "Diseases of male genital organs", "chapter": "Genitourinary", "log_admissions": 5.12, "admissions": 130419, "waiting_list": 80216, "mean_wait": 130.2, "mean_los": 1.5, "emergency_rate": 34.9, "waitlist_growth": -3.0}, {"type": "sub", "code": "N30-N39", "description": "Other diseases of the urinary system", "full_description": "Other diseases of the urinary system", "chapter": "Genitourinary", "log_admissions": 5.37, "admissions": 232212, "waiting_list": 74004, "mean_wait": 102.4, "mean_los": 6.0, "emergency_rate": 60.2, "waitlist_growth": -18.4}, {"type": "sub", "code": "Z00-Z13", "description": "Examination and investigation", "full_description": "Examination and investigation", "chapter": "Health Status & Contact", "log_admissions": 5.38, "admissions": 237434, "waiting_list": 119866, "mean_wait": 100.4, "mean_los": 1.2, "emergency_rate": 12.4, "waitlist_growth": -1.0}, {"type": "sub", "code": "Z40-Z54", "description": "Persons encountering health services for specific ", "full_description": "Persons encountering health services for specific care", "chapter": "Health Status & Contact", "log_admissions": 5.04, "admissions": 109019, "waiting_list": 71396, "mean_wait": 106.7, "mean_los": 2.7, "emergency_rate": 12.3, "waitlist_growth": -33.3}, {"type": "sub", "code": "Z30-Z39", "description": "Health services in circumstances related to reprod", "full_description": "Health services in circumstances related to reproduction", "chapter": "Health Status & Contact", "log_admissions": 5.7, "admissions": 503123, "waiting_list": 20013, "mean_wait": 126.0, "mean_los": 1.0, "emergency_rate": 1.5, "waitlist_growth": -4.7}, {"type": "sub", "code": "A00-A09", "description": "Intestinal infectious diseases", "full_description": "Intestinal infectious diseases", "chapter": "Infectious & Parasitic", "log_admissions": 5.15, "admissions": 142555, "waiting_list": 24946, "mean_wait": 43.0, "mean_los": 3.6, "emergency_rate": 80.1, "waitlist_growth": -36.5}, {"type": "sub", "code": "B35-B49", "description": "Mycoses", "full_description": "Mycoses", "chapter": "Infectious & Parasitic", "log_admissions": 3.95, "admissions": 8948, "waiting_list": 4191, "mean_wait": 32.5, "mean_los": 6.2, "emergency_rate": 40.8, "waitlist_growth": 33.3}, {"type": "sub", "code": "B00-B09", "description": "Viral infections characterized by skin & mucous me", "full_description": "Viral infections characterized by skin & mucous mem. lesns.", "chapter": "Infectious & Parasitic", "log_admissions": 4.21, "admissions": 16097, "waiting_list": 3703, "mean_wait": 56.6, "mean_los": 3.8, "emergency_rate": 73.8, "waitlist_growth": 14.9}, {"type": "sub", "code": "T80-T88", "description": "Complications of surgical & medical care nec.", "full_description": "Complications of surgical & medical care nec.", "chapter": "Injury & Poisoning", "log_admissions": 5.38, "admissions": 237207, "waiting_list": 74356, "mean_wait": 105.7, "mean_los": 5.4, "emergency_rate": 60.4, "waitlist_growth": 7.7}, {"type": "sub", "code": "S60-S69", "description": "Injuries to the wrist & hand", "full_description": "Injuries to the wrist & hand", "chapter": "Injury & Poisoning", "log_admissions": 4.91, "admissions": 81515, "waiting_list": 29010, "mean_wait": 12.0, "mean_los": 1.0, "emergency_rate": 55.3, "waitlist_growth": -0.3}, {"type": "sub", "code": "S50-S59", "description": "Injuries to the elbow & forearm", "full_description": "Injuries to the elbow & forearm", "chapter": "Injury & Poisoning", "log_admissions": 4.77, "admissions": 58701, "waiting_list": 15510, "mean_wait": 9.1, "mean_los": 2.7, "emergency_rate": 65.3, "waitlist_growth": 20.4}, {"type": "sub", "code": "F60-F69", "description": "Disorders of adult personality and behaviour", "full_description": "Disorders of adult personality and behaviour", "chapter": "Mental & Behavioural", "log_admissions": 3.77, "admissions": 5872, "waiting_list": 2125, "mean_wait": 117.7, "mean_los": 40.0, "emergency_rate": 49.7, "waitlist_growth": 0}, {"type": "sub", "code": "F00-F09", "description": "Organic, including symptomatic, mental disorders", "full_description": "Organic, including symptomatic, mental disorders", "chapter": "Mental & Behavioural", "log_admissions": 4.59, "admissions": 38546, "waiting_list": 1617, "mean_wait": 16.1, "mean_los": 18.5, "emergency_rate": 93.0, "waitlist_growth": 0}, {"type": "sub", "code": "F40-F48", "description": "Neurotic, stress-related and somatoform disorders", "full_description": "Neurotic, stress-related and somatoform disorders", "chapter": "Mental & Behavioural", "log_admissions": 4.29, "admissions": 19558, "waiting_list": 1332, "mean_wait": 59.6, "mean_los": 7.8, "emergency_rate": 86.3, "waitlist_growth": 0}, {"type": "sub", "code": "M00-M25", "description": "Arthropathies", "full_description": "Arthropathies", "chapter": "Musculoskeletal", "log_admissions": 5.72, "admissions": 528600, "waiting_list": 392823, "mean_wait": 166.5, "mean_los": 3.0, "emergency_rate": 13.0, "waitlist_growth": -20.3}, {"type": "sub", "code": "M40-M54", "description": "Dorsopathies", "full_description": "Dorsopathies", "chapter": "Musculoskeletal", "log_admissions": 5.43, "admissions": 271499, "waiting_list": 158323, "mean_wait": 171.0, "mean_los": 3.8, "emergency_rate": 33.3, "waitlist_growth": -27.7}, {"type": "sub", "code": "M60-M79", "description": "Soft tissue disorders", "full_description": "Soft tissue disorders", "chapter": "Musculoskeletal", "log_admissions": 5.37, "admissions": 233859, "waiting_list": 104192, "mean_wait": 142.0, "mean_los": 1.6, "emergency_rate": 48.9, "waitlist_growth": -30.5}, {"type": "sub", "code": "D10-D36", "description": "Benign neoplasms", "full_description": "Benign neoplasms", "chapter": "Neoplasms", "log_admissions": 5.55, "admissions": 351623, "waiting_list": 299531, "mean_wait": 68.5, "mean_los": 3.4, "emergency_rate": 3.0, "waitlist_growth": 0}, {"type": "sub", "code": "C43-C44", "description": "Malignant neoplasms of skin", "full_description": "Malignant neoplasms of skin", "chapter": "Neoplasms", "log_admissions": 5.25, "admissions": 176001, "waiting_list": 163439, "mean_wait": 76.1, "mean_los": 3.8, "emergency_rate": 0.9, "waitlist_growth": 23.7}, {"type": "sub", "code": "C81-C96", "description": "Malignant neoplasms of lymphoid, haematopoietic & ", "full_description": "Malignant neoplasms of lymphoid, haematopoietic & rel. tiss.", "chapter": "Neoplasms", "log_admissions": 5.63, "admissions": 428822, "waiting_list": 131517, "mean_wait": 52.7, "mean_los": 11.8, "emergency_rate": 4.6, "waitlist_growth": 82.2}, {"type": "sub", "code": "G50-G59", "description": "Nerve, nerve root and plexus disorders", "full_description": "Nerve, nerve root and plexus disorders", "chapter": "Nervous System", "log_admissions": 4.87, "admissions": 73891, "waiting_list": 63015, "mean_wait": 119.9, "mean_los": 3.2, "emergency_rate": 10.3, "waitlist_growth": 0}, {"type": "sub", "code": "G40-G47", "description": "Episodic and paroxysmal disorders", "full_description": "Episodic and paroxysmal disorders", "chapter": "Nervous System", "log_admissions": 5.12, "admissions": 131168, "waiting_list": 33630, "mean_wait": 108.9, "mean_los": 2.7, "emergency_rate": 64.0, "waitlist_growth": -2.5}, {"type": "sub", "code": "G35-G37", "description": "Demyelinating diseases (incl Multiple Sclerosis) o", "full_description": "Demyelinating diseases (incl Multiple Sclerosis) of the CNS.", "chapter": "Nervous System", "log_admissions": 4.82, "admissions": 66389, "waiting_list": 20563, "mean_wait": 58.8, "mean_los": 11.6, "emergency_rate": 4.5, "waitlist_growth": 49.9}, {"type": "sub", "code": "O00-O08", "description": "Pregnancy with abortive outcome", "full_description": "Pregnancy with abortive outcome", "chapter": "Pregnancy & Childbirth", "log_admissions": 5.01, "admissions": 101187, "waiting_list": 28137, "mean_wait": 5.3, "mean_los": 0.9, "emergency_rate": 52.9, "waitlist_growth": -55.4}, {"type": "sub", "code": "O30-O48", "description": "Maternal care related to the fetus and amniotic ca", "full_description": "Maternal care related to the fetus and amniotic cavity and possible delivery problems", "chapter": "Pregnancy & Childbirth", "log_admissions": 5.67, "admissions": 467730, "waiting_list": 21942, "mean_wait": 19.0, "mean_los": 1.2, "emergency_rate": 1.2, "waitlist_growth": 0}, {"type": "sub", "code": "O20-O29", "description": "Other maternal disorders predominantly related to ", "full_description": "Other maternal disorders predominantly related to pregnancy", "chapter": "Pregnancy & Childbirth", "log_admissions": 5.41, "admissions": 257842, "waiting_list": 6258, "mean_wait": 8.5, "mean_los": 0.7, "emergency_rate": 30.4, "waitlist_growth": 0}, {"type": "sub", "code": "J30-J39", "description": "Other diseases of upper respiratory tract", "full_description": "Other diseases of upper respiratory tract", "chapter": "Respiratory", "log_admissions": 5.0, "admissions": 99890, "waiting_list": 73824, "mean_wait": 149.9, "mean_los": 1.8, "emergency_rate": 21.3, "waitlist_growth": -16.4}, {"type": "sub", "code": "J00-J06", "description": "Acute upper respiratory infections", "full_description": "Acute upper respiratory infections", "chapter": "Respiratory", "log_admissions": 5.13, "admissions": 134421, "waiting_list": 23390, "mean_wait": 156.7, "mean_los": 0.8, "emergency_rate": 80.9, "waitlist_growth": -26.4}, {"type": "sub", "code": "J40-J47", "description": "Chronic lower respiratory diseases", "full_description": "Chronic lower respiratory diseases", "chapter": "Respiratory", "log_admissions": 5.33, "admissions": 215822, "waiting_list": 12883, "mean_wait": 111.5, "mean_los": 4.7, "emergency_rate": 89.1, "waitlist_growth": 40.5}, {"type": "sub", "code": "L80-L99", "description": "Other disorders of the skin and subcutaneous tissu", "full_description": "Other disorders of the skin and subcutaneous tissue", "chapter": "Skin", "log_admissions": 5.02, "admissions": 103575, "waiting_list": 81972, "mean_wait": 69.2, "mean_los": 10.8, "emergency_rate": 17.6, "waitlist_growth": 0}, {"type": "sub", "code": "L60-L75", "description": "Disorders of skin appendages", "full_description": "Disorders of skin appendages", "chapter": "Skin", "log_admissions": 4.71, "admissions": 51523, "waiting_list": 33106, "mean_wait": 110.4, "mean_los": 0.6, "emergency_rate": 31.8, "waitlist_growth": 0}, {"type": "sub", "code": "L00-L08", "description": "Infections of the skin and subcutaneous tissue", "full_description": "Infections of the skin and subcutaneous tissue", "chapter": "Skin", "log_admissions": 5.28, "admissions": 189626, "waiting_list": 23321, "mean_wait": 67.4, "mean_los": 3.6, "emergency_rate": 81.3, "waitlist_growth": 0}, {"type": "sub", "code": "R10-R19", "description": "Symptoms & signs inv. the digestive system & abdom", "full_description": "Symptoms & signs inv. the digestive system & abdomen", "chapter": "Symptoms & Signs", "log_admissions": 5.71, "admissions": 518620, "waiting_list": 222235, "mean_wait": 40.2, "mean_los": 1.2, "emergency_rate": 53.3, "waitlist_growth": 24.0}, {"type": "sub", "code": "R50-R69", "description": "General symptoms & signs", "full_description": "General symptoms & signs", "chapter": "Symptoms & Signs", "log_admissions": 5.73, "admissions": 540068, "waiting_list": 88139, "mean_wait": 56.2, "mean_los": 9.3, "emergency_rate": 68.0, "waitlist_growth": 0}, {"type": "sub", "code": "R30-R39", "description": "Symptoms & signs involving the urinary system", "full_description": "Symptoms & signs involving the urinary system", "chapter": "Symptoms & Signs", "log_admissions": 4.98, "admissions": 96062, "waiting_list": 39924, "mean_wait": 56.3, "mean_los": 2.2, "emergency_rate": 50.2, "waitlist_growth": -37.8}];
+
+const COLORS = {
+  'Infectious & Parasitic':'#f97316','Neoplasms':'#a855f7',
+  'Endocrine & Metabolic':'#eab308','Mental & Behavioural':'#ec4899',
+  'Nervous System':'#8b5cf6','Eye / Ear':'#06b6d4','Circulatory':'#ef4444',
+  'Respiratory':'#3b82f6','Digestive':'#22c55e','Skin':'#f59e0b',
+  'Musculoskeletal':'#84cc16','Genitourinary':'#14b8a6',
+  'Pregnancy & Childbirth':'#f472b6','Symptoms & Signs':'#94a3b8',
+  'Injury & Poisoning':'#fbbf24','Health Status & Contact':'#64748b',
+};
+const AXES = [
+  {key:'log_admissions', label:'Total Admissions',     unit:'(log₁₀ scale)',          fmt:v=>Math.round(Math.pow(10,v)).toLocaleString()},
+  {key:'waiting_list',   label:'Waiting List Size',    unit:'(patients queued, 2024)', fmt:v=>Math.round(v/1000)+'k'},
+  {key:'mean_wait',      label:'Mean Wait Time',       unit:'(days)',                  fmt:v=>v.toFixed(0)+'d'},
+  {key:'mean_los',       label:'Mean Length of Stay',  unit:'(days, once admitted)',   fmt:v=>v.toFixed(1)+'d'},
+  {key:'emergency_rate', label:'Emergency Rate',       unit:'(% bypassing waitlist)',  fmt:v=>v.toFixed(0)+'%'},
+  {key:'waitlist_growth',label:'Waitlist Growth',      unit:'(% change 2014→2024)',fmt:v=>(v>0?'+':'')+v.toFixed(0)+'%'},
+];
+const M={top:68,bottom:26,left:55,right:18};
+let activeChapters=new Set(CHAPTERS.map(d=>d.chapter));
+let activeFilter='all', pinned=null, showSubs=false;
+const svgEl=document.getElementById('svg');
+const ttEl=document.getElementById('tt');
+const caEl=document.getElementById('chart');
+function sz(){const r=caEl.getBoundingClientRect();return{W:r.width,H:r.height};}
+function scl(W,H){
+  const iW=W-M.left-M.right,iH=H-M.top-M.bottom;
+  const xPos=AXES.map((_,i)=>M.left+i/(AXES.length-1)*iW);
+  const ys={};
+  const all=[...CHAPTERS,...SUBS];
+  AXES.forEach(ax=>{
+    const vs=all.map(d=>d[ax.key]).filter(v=>v!=null&&!isNaN(v));
+    const mn=Math.min(...vs),mx=Math.max(...vs),pad=(mx-mn)*0.07;
+    ys[ax.key]={min:mn-pad,max:mx+pad};
+  });
+  return{xPos,ys,iH};
+}
+function yp(key,val,ys,iH){
+  const s=ys[key];
+  if(val==null||isNaN(val))return M.top+iH/2;
+  return M.top+iH-((val-s.min)/(s.max-s.min))*iH;
+}
+function mkPath(d,xPos,ys,iH){
+  return 'M'+AXES.map((ax,i)=>`${xPos[i]},${yp(ax.key,d[ax.key],ys,iH)}`).join('L');
+}
+function passes(d){
+  if(!activeChapters.has(d.chapter)) return false;
+  if(activeFilter==='high-wait'  && d.mean_wait<=100)     return false;
+  if(activeFilter==='high-emerg' && d.emergency_rate<=70)  return false;
+  if(activeFilter==='mental'     && d.chapter!=='Mental & Behavioural') return false;
+  if(activeFilter==='musculo'    && d.chapter!=='Musculoskeletal')       return false;
+  if(activeFilter==='growing'    && d.waitlist_growth<=20) return false;
+  return true;
+}
+function render(){
+  const{W,H}=sz();
+  svgEl.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const{xPos,ys,iH}=scl(W,H);
+  let html='';
+  for(let t=0;t<=4;t++){
+    const y=M.top+t/4*iH;
+    html+=`<line class="grid" x1="${xPos[0]}" y1="${y}" x2="${xPos[xPos.length-1]}" y2="${y}"/>`;
+  }
+  AXES.forEach((ax,i)=>{
+    const x=xPos[i],yt=M.top,yb=M.top+iH;
+    html+=`<line class="axis" x1="${x}" y1="${yt}" x2="${x}" y2="${yb}"/>`;
+    html+=`<text class="alabel" x="${x}" y="${yt-36}">${ax.label}</text>`;
+    html+=`<text class="aunit"  x="${x}" y="${yt-22}">${ax.unit}</text>`;
+    const s=ys[ax.key];
+    for(let t=0;t<=4;t++){
+      const val=s.min+t/4*(s.max-s.min),y=M.top+iH-t/4*iH;
+      html+=`<line class="tick" x1="${x-4}" y1="${y}" x2="${x+4}" y2="${y}"/>`;
+      html+=`<text class="tlabel" x="${x}" y="${y+11}">${ax.fmt(val)}</text>`;
+    }
+  });
+  if(showSubs){
+    SUBS.filter(d=>!passes(d)).forEach(d=>{
+      html+=`<path class="sline dim" d="${mkPath(d,xPos,ys,iH)}" stroke="${COLORS[d.chapter]||'#475569'}" data-code="${d.code}" data-t="sub"/>`;
+    });
+    SUBS.filter(passes).forEach(d=>{
+      const cls=d.code===pinned?'sline pin':'sline';
+      html+=`<path class="${cls}" d="${mkPath(d,xPos,ys,iH)}" stroke="${COLORS[d.chapter]||'#475569'}" data-code="${d.code}" data-t="sub"/>`;
+    });
+  }
+  CHAPTERS.filter(d=>!passes(d)).forEach(d=>{
+    html+=`<path class="cline dim" d="${mkPath(d,xPos,ys,iH)}" stroke="${COLORS[d.chapter]||'#475569'}" data-code="${d.code}" data-t="ch"/>`;
+  });
+  CHAPTERS.filter(passes).forEach(d=>{
+    const cls=d.code===pinned?'cline pin':'cline';
+    html+=`<path class="${cls}" d="${mkPath(d,xPos,ys,iH)}" stroke="${COLORS[d.chapter]||'#475569'}" data-code="${d.code}" data-t="ch"/>`;
+  });
+  svgEl.innerHTML=html;
+  document.getElementById('count').textContent=`${CHAPTERS.filter(passes).length}/${CHAPTERS.length} chapters`;
+  svgEl.querySelectorAll('.cline:not(.dim),.sline:not(.dim)').forEach(el=>{
+    el.addEventListener('mouseenter',onHover);
+    el.addEventListener('mouseleave',onLeave);
+    el.addEventListener('click',onClick);
+  });
+}
+function tooltip(d){
+  const gc=d.waitlist_growth>50?'#f87171':d.waitlist_growth<0?'#4ade80':'#fbbf24';
+  const ec=d.emergency_rate>70?'#f87171':d.emergency_rate>40?'#fbbf24':'#4ade80';
+  const badge=d.type==='chapter'
+    ?`<span class="tt-type" style="background:#1e3a5f;color:#93c5fd">Chapter aggregate</span>`
+    :`<span class="tt-type" style="background:#1a2e1a;color:#86efac">Subcategory &bull; ${d.chapter}</span>`;
+  return `
+    <div class="tt-title">${d.full_description}</div>
+    <div class="tt-code" style="color:${COLORS[d.chapter]||'#94a3b8'}">${d.code}</div>
+    <div class="tt-row"><span>Total Admissions (2023-24)</span><span class="tt-val">${d.admissions.toLocaleString()}</span></div>
+    <div class="tt-row"><span>Waiting List Size</span><span class="tt-val">${d.waiting_list.toLocaleString()}</span></div>
+    <div class="tt-row"><span>Mean Wait Time</span><span class="tt-val">${d.mean_wait} days</span></div>
+    <div class="tt-row"><span>Mean Length of Stay</span><span class="tt-val">${d.mean_los} days</span></div>
+    <div class="tt-row"><span>Emergency Rate</span><span class="tt-val" style="color:${ec}">${d.emergency_rate}%</span></div>
+    <div class="tt-row"><span>Waitlist Growth 2014→2024</span><span class="tt-val" style="color:${gc}">${d.waitlist_growth>0?'+':''}${d.waitlist_growth}%</span></div>
+    ${badge}`;
+}
+function findData(code,t){return t==='ch'?CHAPTERS.find(d=>d.code===code):SUBS.find(d=>d.code===code);}
+function onHover(e){
+  const d=findData(e.target.dataset.code,e.target.dataset.t); if(!d) return;
+  if(d.code!==pinned){e.target.style.strokeOpacity='1';e.target.style.strokeWidth=d.type==='chapter'?'4':'2';}
+  ttEl.innerHTML=tooltip(d); ttEl.style.display='block'; moveTT(e);
+}
+function onLeave(e){
+  if(e.target.dataset.code!==pinned){e.target.style.strokeOpacity='';e.target.style.strokeWidth='';}
+  ttEl.style.display='none';
+}
+function onClick(e){pinned=pinned===e.target.dataset.code?null:e.target.dataset.code; render();}
+function moveTT(e){
+  const r=caEl.getBoundingClientRect();
+  let x=e.clientX-r.left+14,y=e.clientY-r.top-10;
+  if(x+300>r.width) x-=315;
+  if(y+260>r.height) y-=260;
+  ttEl.style.left=x+'px'; ttEl.style.top=y+'px';
+}
+svgEl.addEventListener('mousemove',e=>{if(ttEl.style.display==='block') moveTT(e);});
+function buildSidebar(){
+  const body=document.getElementById('sb-body');
+  CHAPTERS.forEach(ch=>{
+    const div=document.createElement('div'); div.className='li'; div.dataset.ch=ch.chapter;
+    div.innerHTML=`<div class="dot" style="background:${COLORS[ch.chapter]||'#475569'}"></div><div class="lname">${ch.chapter}</div>`;
+    div.addEventListener('click',()=>{
+      if(activeChapters.size===CHAPTERS.length){activeChapters=new Set([ch.chapter]);}
+      else if(activeChapters.has(ch.chapter)&&activeChapters.size===1){activeChapters=new Set(CHAPTERS.map(d=>d.chapter));}
+      else{activeChapters=new Set([ch.chapter]);}
+      document.querySelectorAll('.li').forEach(l=>l.classList.toggle('off',!activeChapters.has(l.dataset.ch)));
+      render();
+    });
+    body.appendChild(div);
+  });
+}
+document.querySelectorAll('.btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.btn').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); activeFilter=b.dataset.f; render();
+  });
+});
+document.getElementById('btn-ch').addEventListener('click',()=>{
+  showSubs=false;
+  document.getElementById('btn-ch').classList.add('active');
+  document.getElementById('btn-sub').classList.remove('active');
+  render();
+});
+document.getElementById('btn-sub').addEventListener('click',()=>{
+  showSubs=true;
+  document.getElementById('btn-sub').classList.add('active');
+  document.getElementById('btn-ch').classList.remove('active');
+  render();
+});
+buildSidebar(); render();
+window.addEventListener('resize',render);
+</script>
+</body>
+</html>
